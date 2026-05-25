@@ -1,0 +1,74 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Project Pulse</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <main class="dashboard" role="main" aria-label="Project Pulse dashboard">
+    <h1>Project Pulse</h1>
+    <div id="projects" class="projects-grid" aria-live="polite"></div>
+    <div id="error" class="error" hidden role="alert"></div>
+  </main>
+
+  <script>
+    async function loadProjects() {
+      const projectsEl = document.getElementById('projects');
+      const errorEl = document.getElementById('error');
+      try {
+        const resp = await fetch('project-data.json', {cache: 'no-store'});
+        if (!resp.ok) throw new Error('Failed to load project-data.json');
+        const data = await resp.json();
+        const items = data && data.Projects ? data.Projects : [];
+        if (!Array.isArray(items) || items.length === 0) {
+          projectsEl.innerHTML = '<p class="empty">No projects to display.</p>';
+          return;
+        }
+        projectsEl.innerHTML = items.map(projectCardHTML).join('');
+      } catch (err) {
+        console.error(err);
+        errorEl.hidden = false;
+        errorEl.textContent = 'Error loading projects. Please check project-data.json.';
+      }
+    }
+
+    function projectCardHTML(p) {
+      const name = escapeHtml(p.name || 'Untitled');
+      const owner = escapeHtml(p.owner || 'Unknown');
+      const status = escapeHtml(p.status || 'Unknown');
+      const recent = escapeHtml(p.recentActivity || 'No recent activity');
+      const priority = escapeHtml(p.priority || 'Normal');
+      const statusClass = `badge status-${status.toLowerCase().replace(/\s+/g,'-')}`;
+      return `
+        <article class="project-card" tabindex="0" aria-label="Project ${name}">
+          <header class="card-header">
+            <h2 class="project-name">${name}</h2>
+            <div class="badges">
+              <span class="${statusClass}" aria-label="Status: ${status}">${status}</span>
+              <span class="badge priority" aria-label="Priority: ${priority}">${priority}</span>
+            </div>
+          </header>
+          <div class="card-body">
+            <p class="owner">Owner: ${owner}</p>
+            <p class="recent">Recent: ${recent}</p>
+          </div>
+        </article>
+      `;
+    }
+
+    function escapeHtml(str) {
+      return String(str)
+        .replace(/&/g, '&amp;')
+        .replace(/</g, '&lt;')
+        .replace(/>/g, '&gt;')
+        .replace(/"/g, '&quot;')
+        .replace(/'/g, '&#039;');
+    }
+
+    // Kick off
+    loadProjects();
+  </script>
+</body>
+</html>

@@ -1,0 +1,32 @@
+{
+  "Projects": [
+    {
+      "name": "Mona Website Redesign",
+      "owner": "A. Rivera",
+      "status": "In Progress",
+      "recentActivity": "UI review completed",
+      "priority": "High"
+    },
+    {
+      "name": "Analytics Migration",
+      "owner": "B. Singh",
+      "status": "Planned",
+      "recentActivity": "Requirements finalized",
+      "priority": "Medium"
+    },
+    {
+      "name": "Mobile App Stability",
+      "owner": "C. Chen",
+      "status": "Blocked",
+      "recentActivity": "Waiting on backend fix",
+      "priority": "Critical"
+    },
+    {
+      "name": "Marketing Microsite",
+      "owner": "D. Patel",
+      "status": "Completed",
+      "recentActivity": "Deployed to production",
+      "priority": "Low"
+    }
+  ]
+}
